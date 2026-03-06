@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Search Results - AP Bus Booking</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-bus text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">AP Bus Booking</h1>
+                        <p class="text-sm text-purple-100">Your Journey Across Andhra Pradesh</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="/" class="text-white hover:text-purple-100">
+                        <i class="fas fa-arrow-left mr-2"></i>Back to Search
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Search Summary -->
+    <section class="bg-white border-b">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4">
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>
+                        <span class="font-bold text-lg">{{ from_city }}</span>
+                    </div>
+                    <i class="fas fa-arrow-right text-gray-400"></i>
+                    <div class="flex items-center">
+                        <i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>
+                        <span class="font-bold text-lg">{{ to_city }}</span>
+                    </div>
+                    <div class="flex items-center">
+                        <i class="fas fa-calendar text-purple-600 mr-2"></i>
+                        <span class="font-bold text-lg">{{ date }}</span>
+                    </div>
+                </div>
+                <div class="text-gray-600">
+                    <span id="busCount">{{ buses|length }}</span> buses found
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Filters and Sort -->
+    <section class="bg-white border-b sticky top-0 z-10">
+        <div class="container mx-auto px-4 py-3">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-4 overflow-x-auto">
+                    <button class="filter-btn px-4 py-2 bg-purple-600 text-white rounded-lg text-sm whitespace-nowrap" data-filter="all">
+                        All Buses
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm whitespace-nowrap hover:bg-gray-300" data-filter="AC">
+                        AC Buses
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm whitespace-nowrap hover:bg-gray-300" data-filter="Non-AC">
+                        Non-AC Buses
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm whitespace-nowrap hover:bg-gray-300" data-filter="Sleeper">
+                        Sleeper
+                    </button>
+                    <button class="filter-btn px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm whitespace-nowrap hover:bg-gray-300" data-filter="Seater">
+                        Seater
+                    </button>
+                </div>
+                
+                <div class="flex items-center space-x-2">
+                    <span class="text-sm text-gray-600">Sort by:</span>
+                    <button onclick="sortBuses('price')" class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300">
+                        <i class="fas fa-rupee-sign mr-1"></i>Price
+                    </button>
+                    <button onclick="sortBuses('departure')" class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300">
+                        <i class="fas fa-clock mr-1"></i>Departure
+                    </button>
+                    <button onclick="sortBuses('rating')" class="px-3 py-1 bg-gray-200 text-gray-700 rounded text-sm hover:bg-gray-300">
+                        <i class="fas fa-star mr-1"></i>Rating
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Bus Results -->
+    <section class="py-6">
+        <div class="container mx-auto px-4">
+            {% if buses %}
+                <div id="busResults" class="space-y-4">
+                    {% for bus in buses %}
+                    <div class="bus-card bg-white rounded-lg shadow-md card-hover p-6" data-bus-type="{{ bus.bus_type }}">
+                        <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+                            <!-- Operator Info -->
+                            <div class="md:col-span-3">
+                                <div class="flex items-center space-x-3 mb-3">
+                                    <div class="bg-purple-100 rounded-full w-12 h-12 flex items-center justify-center">
+                                        <i class="fas fa-bus text-purple-600"></i>
+                                    </div>
+                                    <div>
+                                        <h3 class="font-bold text-lg">{{ bus.operator }}</h3>
+                                        <div class="flex items-center text-sm text-gray-600">
+                                            <i class="fas fa-star text-yellow-500 mr-1"></i>
+                                            <span>{{ bus.rating }}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="text-sm text-gray-600">
+                                    <p class="mb-1"><span class="font-semibold">Type:</span> {{ bus.bus_type }}</p>
+                                    <p><span class="font-semibold">Seats:</span> {{ bus.available_seats }} available</p>
+                                </div>
+                            </div>
+
+                            <!-- Journey Details -->
+                            <div class="md:col-span-6">
+                                <div class="flex items-center justify-between">
+                                    <div class="text-center">
+                                        <p class="text-2xl font-bold">{{ bus.departure_time }}</p>
+                                        <p class="text-gray-600">{{ bus.from_city }}</p>
+                                    </div>
+                                    <div class="flex-1 mx-4">
+                                        <div class="relative">
+                                            <div class="border-t-2 border-dashed border-gray-300"></div>
+                                            <div class="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 bg-white px-2">
+                                                <span class="text-sm text-gray-600">{{ bus.duration }}</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="text-center">
+                                        <p class="text-2xl font-bold">{{ bus.arrival_time }}</p>
+                                        <p class="text-gray-600">{{ bus.to_city }}</p>
+                                    </div>
+                                </div>
+                                
+                                <!-- Amenities -->
+                                <div class="mt-4 flex flex-wrap gap-2">
+                                    {% for amenity in bus.amenities %}
+                                    <span class="px-2 py-1 bg-gray-100 text-gray-600 rounded text-xs">
+                                        {% if amenity == 'WiFi' %}<i class="fas fa-wifi mr-1"></i>{% endif %}
+                                        {% if amenity == 'Charging Points' %}<i class="fas fa-charging-station mr-1"></i>{% endif %}
+                                        {% if amenity == 'Water Bottle' %}<i class="fas fa-tint mr-1"></i>{% endif %}
+                                        {% if amenity == 'Blanket' %}<i class="fas fa-bed mr-1"></i>{% endif %}
+                                        {% if amenity == 'Snacks' %}<i class="fas fa-cookie mr-1"></i>{% endif %}
+                                        {% if amenity == 'AC' %}<i class="fas fa-snowflake mr-1"></i>{% endif %}
+                                        {{ amenity }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+
+                            <!-- Price and Booking -->
+                            <div class="md:col-span-3 text-center">
+                                <div class="mb-4">
+                                    <p class="text-3xl font-bold text-green-600">₹{{ bus.price }}</p>
+                                    <p class="text-sm text-gray-600">per person</p>
+                                </div>
+                                <button onclick="selectBus('{{ bus.id }}')" 
+                                        class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:from-purple-700 hover:to-pink-700 transition transform hover:scale-105">
+                                    <i class="fas fa-ticket-alt mr-2"></i>Select Seats
+                                </button>
+                                {% if bus.available_seats < 5 %}
+                                <p class="text-orange-500 text-sm mt-2">
+                                    <i class="fas fa-exclamation-triangle mr-1"></i>
+                                    Only {{ bus.available_seats }} seats left!
+                                </p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="bg-white rounded-lg shadow-md p-12 text-center">
+                    <i class="fas fa-bus text-gray-300 text-6xl mb-4"></i>
+                    <h3 class="text-xl font-bold text-gray-700 mb-2">No buses found</h3>
+                    <p class="text-gray-600 mb-6">We couldn't find any buses for this route on selected date.</p>
+                    <a href="/" class="px-6 py-3 bg-purple-600 text-white rounded-lg font-semibold hover:bg-purple-700 transition">
+                        <i class="fas fa-search mr-2"></i>Try Different Search
+                    </a>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+
+    <!-- Loading Overlay -->
+    <div id="loadingOverlay" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+        <div class="bg-white rounded-lg p-6 text-center">
+            <i class="fas fa-spinner fa-spin text-purple-600 text-3xl mb-4"></i>
+            <p class="text-gray-700">Loading bus details...</p>
+        </div>
+    </div>
+
+    <script>
+        let currentBuses = JSON.parse('{{ buses | tojson }}');
+        
+        // Filter functionality
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Update button styles
+                document.querySelectorAll('.filter-btn').forEach(b => {
+                    b.classList.remove('bg-purple-600', 'text-white');
+                    b.classList.add('bg-gray-200', 'text-gray-700');
+                });
+                this.classList.remove('bg-gray-200', 'text-gray-700');
+                this.classList.add('bg-purple-600', 'text-white');
+                
+                // Filter buses
+                const filter = this.dataset.filter;
+                const busCards = document.querySelectorAll('.bus-card');
+                let visibleCount = 0;
+                
+                busCards.forEach(card => {
+                    if (filter === 'all') {
+                        card.style.display = 'block';
+                        visibleCount++;
+                    } else {
+                        const busType = card.dataset.busType.toLowerCase();
+                        if (busType.includes(filter.toLowerCase())) {
+                            card.style.display = 'block';
+                            visibleCount++;
+                        } else {
+                            card.style.display = 'none';
+                        }
+                    }
+                });
+                
+                // Update count
+                document.getElementById('busCount').textContent = visibleCount;
+            });
+        });
+
+        // Select bus function
+        function selectBus(busId) {
+            showLoading();
+            window.location.href = `/bus/${busId}`;
+        }
+
+        // Sort buses
+        function sortBuses(criteria) {
+            const busResults = document.getElementById('busResults');
+            const busCards = Array.from(busResults.querySelectorAll('.bus-card'));
+            
+            busCards.sort((a, b) => {
+                const busA = currentBuses.find(bus => bus.id === a.dataset.busId);
+                const busB = currentBuses.find(bus => bus.id === b.dataset.busId);
+                
+                if (!busA || !busB) return 0;
+                
+                if (criteria === 'price') {
+                    return busA.price - busB.price;
+                } else if (criteria === 'departure') {
+                    return busA.departure_time.localeCompare(busB.departure_time);
+                } else if (criteria === 'rating') {
+                    return busB.rating - busA.rating;
+                }
+                return 0;
+            });
+            
+            busResults.innerHTML = '';
+            busCards.forEach(card => busResults.appendChild(card));
+        }
+
+        // Show loading overlay
+        function showLoading() {
+            document.getElementById('loadingOverlay').classList.remove('hidden');
+        }
+
+        // Hide loading overlay
+        function hideLoading() {
+            document.getElementById('loadingOverlay').classList.add('hidden');
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            // Auto-apply filters if URL params exist
+            const urlParams = new URLSearchParams(window.location.search);
+            const busType = urlParams.get('type');
+            if (busType) {
+                const filterBtn = document.querySelector(`[data-filter="${busType}"]`);
+                if (filterBtn) {
+                    filterBtn.click();
+                }
+            }
+        });
+    </script>
+</body>
+</html>

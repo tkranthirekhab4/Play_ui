@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AP Bus Booking - Andhra Pradesh Bus Ticket Booking</title>
+    <script src="https://cdn.tailwindcss.com?v=20260306"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css?v=20260306">
+    <style>
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        /* Fix dropdown visibility with minimal interference */
+        select {
+            position: relative !important;
+            z-index: 9999 !important;
+            color: #333 !important;
+            background-color: white !important;
+        }
+        .form-select {
+            width: 100% !important;
+            padding: 12px 16px !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 8px !important;
+            font-size: 1.125rem !important;
+            line-height: 1.75rem !important;
+            color: #333 !important;
+            background-color: white !important;
+            position: relative !important;
+            z-index: 9999 !important;
+        }
+        .form-select:focus {
+            outline: none !important;
+            border-color: #9333ea !important;
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1) !important;
+        }
+        .form-input {
+            width: 100% !important;
+            padding: 12px 16px !important;
+            border: 1px solid #d1d5db !important;
+            border-radius: 8px !important;
+            font-size: 1.125rem !important;
+            line-height: 1.75rem !important;
+            color: #333 !important;
+            background-color: white !important;
+            position: relative !important;
+            z-index: 9999 !important;
+        }
+        .form-input:focus {
+            outline: none !important;
+            border-color: #9333ea !important;
+            box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.1) !important;
+        }
+        /* Specific styling for date inputs */
+        input[type="date"] {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+            text-align: left !important;
+            padding: 12px 16px !important;
+            -webkit-text-fill-color: #000000 !important;
+            opacity: 1 !important;
+            text-shadow: 0 0 0 #000000 !important;
+            font-weight: normal !important;
+        }
+        input[type="date"]:focus {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+            -webkit-text-fill-color: #000000 !important;
+            text-shadow: 0 0 0 #000000 !important;
+        }
+        input[type="date"]::placeholder {
+            color: #6b7280 !important;
+            opacity: 1 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-text {
+            color: #000000 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-month-field {
+            color: #000000 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-day-field {
+            color: #000000 !important;
+        }
+        input[type="date"]::-webkit-datetime-edit-year-field {
+            color: #000000 !important;
+        }
+        input[type="date"]::-webkit-calendar-picker-indicator {
+            background: transparent !important;
+            color: #9333ea !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+            filter: invert(0.5) !important;
+        }
+        input[type="date"]::-webkit-inner-spin-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+        input[type="date"]::-webkit-clear-button {
+            -webkit-appearance: none !important;
+            margin: 0 !important;
+        }
+        /* Firefox specific fixes */
+        input[type="date"]::-moz-focus-inner {
+            border: 0 !important;
+        }
+        input[type="date"]::-moz-calendar-picker-indicator {
+            background: transparent !important;
+            color: #9333ea !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+        }
+        /* Specific styling for travel date input */
+        #travelDate {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+            -webkit-text-fill-color: #000000 !important;
+            text-shadow: 0 0 0 #000000 !important;
+            opacity: 1 !important;
+        }
+        #travelDate:focus {
+            color: #000000 !important;
+            background-color: #ffffff !important;
+            -webkit-text-fill-color: #000000 !important;
+            text-shadow: 0 0 0 #000000 !important;
+        }
+        .search-form-container {
+            position: relative !important;
+            z-index: 1 !important;
+            overflow: visible !important;
+        }
+        /* Fix any potential z-index conflicts */
+        .hero-section {
+            position: relative !important;
+            z-index: 1 !important;
+            overflow: visible !important;
+        }
+        /* Ensure dropdown appears above other elements */
+        select:focus {
+            z-index: 10000 !important;
+            position: relative !important;
+        }
+        /* Additional fixes for dropdown visibility */
+        body {
+            overflow-x: hidden;
+        }
+        .container {
+            overflow: visible !important;
+        }
+        /* Ensure dropdown is not clipped */
+        .grid {
+            overflow: visible !important;
+        }
+        .space-y-6 > * {
+            overflow: visible !important;
+        }
+        /* Additional viewport fixes */
+        html, body {
+            overflow-x: visible !important;
+            overflow-y: auto !important;
+        }
+        /* Fix grid items that might clip dropdown */
+        .grid-cols-1 > div {
+            overflow: visible !important;
+            position: relative !important;
+        }
+        .md\:grid-cols-2 > div {
+            overflow: visible !important;
+            position: relative !important;
+        }
+        /* Ensure form containers don't clip dropdown */
+        form {
+            overflow: visible !important;
+            position: relative !important;
+        }
+        /* Specific fix for the select elements */
+        #fromCity, #toCity {
+            position: relative !important;
+            z-index: 99999 !important;
+            overflow: visible !important;
+        }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <!-- Header -->
+    <header class="gradient-bg text-white shadow-lg">
+        <div class="container mx-auto px-4 py-4">
+            <div class="flex items-center justify-between">
+                <div class="flex items-center space-x-3">
+                    <i class="fas fa-bus text-3xl"></i>
+                    <div>
+                        <h1 class="text-2xl font-bold">AP Bus Booking</h1>
+                        <p class="text-purple-100 text-sm">Your Journey Across Andhra Pradesh</p>
+                    </div>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <div class="hidden md:flex items-center space-x-2 text-sm">
+                        <i class="fas fa-phone"></i>
+                        <span>24/7 Support: 1800-123-4567</span>
+                    </div>
+                    <div id="authButtons" class="flex items-center space-x-3">
+                        <a href="/login" class="px-4 py-2 bg-white text-purple-600 rounded-lg font-semibold hover:bg-purple-50 transition">
+                            <i class="fas fa-sign-in-alt mr-2"></i>Login
+                        </a>
+                        <a href="/register" class="px-4 py-2 bg-purple-500 text-white rounded-lg font-semibold hover:bg-purple-400 transition">
+                            <i class="fas fa-user-plus mr-2"></i>Register
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section with Search -->
+    <section class="gradient-bg text-white py-16 hero-section">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-10">
+                <h2 class="text-4xl font-bold mb-4">Book Your Bus Journey</h2>
+                <p class="text-xl text-purple-100">Travel safely across Andhra Pradesh with trusted operators</p>
+            </div>
+            
+            <!-- Search Form -->
+            <div class="max-w-5xl mx-auto bg-white rounded-xl shadow-2xl p-8 search-form-container">
+                <form id="searchForm" class="space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                <i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>From City
+                            </label>
+                            <select id="fromCity" required class="form-select">
+                                <option value="">Select departure city</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                <i class="fas fa-map-marker-alt text-purple-600 mr-2"></i>To City
+                            </label>
+                            <select id="toCity" required class="form-select">
+                                <option value="">Select destination city</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                <i class="fas fa-calendar text-purple-600 mr-2"></i>Travel Date
+                            </label>
+                            <input type="text" id="travelDateDisplay" placeholder="Select date" 
+                                   style="width: 100%; padding: 12px; border: 2px solid #333; background: white; color: black; font-size: 16px; border-radius: 8px;">
+                            <input type="hidden" id="travelDate" name="travelDate" required>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                <i class="fas fa-users text-purple-600 mr-2"></i>Passengers
+                            </label>
+                            <select id="passengers" class="form-select">
+                                <option value="1">1 Passenger</option>
+                                <option value="2">2 Passengers</option>
+                                <option value="3">3 Passengers</option>
+                                <option value="4">4 Passengers</option>
+                                <option value="5">5 Passengers</option>
+                                <option value="6">6 Passengers</option>
+                            </select>
+                        </div>
+                        
+                        <div>
+                            <label class="block text-gray-700 text-sm font-bold mb-2">
+                                <i class="fas fa-filter text-purple-600 mr-2"></i>Bus Type
+                            </label>
+                            <select id="busType" class="form-select">
+                                <option value="">All Types</option>
+                                <option value="AC">AC Buses</option>
+                                <option value="Non-AC">Non-AC Buses</option>
+                                <option value="Sleeper">Sleeper</option>
+                                <option value="Seater">Seater</option>
+                            </select>
+                        </div>
+                        
+                        <div class="flex items-end">
+                            <button type="submit" 
+                                    class="w-full px-6 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-bold hover:from-purple-700 hover:to-pink-700 transition transform hover:scale-105 text-lg">
+                                <i class="fas fa-search mr-2"></i>Search Buses
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Popular Routes -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-8 text-gray-800">Popular Routes in Andhra Pradesh</h3>
+            <div id="popularRoutes" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Popular routes will be loaded here -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Features -->
+    <section class="py-12 bg-white">
+        <div class="container mx-auto px-4">
+            <h3 class="text-3xl font-bold text-center mb-8 text-gray-800">Why Choose AP Bus Booking?</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="text-center">
+                    <div class="bg-purple-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-shield-alt text-purple-600 text-3xl"></i>
+                    </div>
+                    <h4 class="font-bold mb-2 text-xl">Safe & Secure</h4>
+                    <p class="text-gray-600">Verified operators and secure payment gateway</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-green-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-tag text-green-600 text-3xl"></i>
+                    </div>
+                    <h4 class="font-bold mb-2 text-xl">Best Prices</h4>
+                    <p class="text-gray-600">Competitive fares and exclusive discounts</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-blue-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-headset text-blue-600 text-3xl"></i>
+                    </div>
+                    <h4 class="font-bold mb-2 text-xl">24/7 Support</h4>
+                    <p class="text-gray-600">Round the clock customer assistance</p>
+                </div>
+                
+                <div class="text-center">
+                    <div class="bg-orange-100 rounded-full w-20 h-20 flex items-center justify-center mx-auto mb-4">
+                        <i class="fas fa-bolt text-orange-600 text-3xl"></i>
+                    </div>
+                    <h4 class="font-bold mb-2 text-xl">Instant Booking</h4>
+                    <p class="text-gray-600">Quick and easy booking process</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Statistics -->
+    <section class="py-12 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <i class="fas fa-route text-purple-600 text-4xl mb-4"></i>
+                    <h4 class="text-3xl font-bold text-gray-800">500+</h4>
+                    <p class="text-gray-600 text-lg">Daily Routes</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <i class="fas fa-bus text-green-600 text-4xl mb-4"></i>
+                    <h4 class="text-3xl font-bold text-gray-800">2000+</h4>
+                    <p class="text-gray-600 text-lg">Buses Daily</p>
+                </div>
+                <div class="bg-white rounded-lg shadow-md p-6 card-hover">
+                    <i class="fas fa-users text-blue-600 text-4xl mb-4"></i>
+                    <h4 class="text-3xl font-bold text-gray-800">1 Lakh+</h4>
+                    <p class="text-gray-600 text-lg">Happy Customers</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-8">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+                <div>
+                    <h5 class="font-bold mb-4 text-lg">AP Bus Booking</h5>
+                    <p class="text-gray-400">Your trusted partner for bus travel across Andhra Pradesh.</p>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-4 text-lg">Quick Links</h5>
+                    <ul class="text-gray-400 space-y-2">
+                        <li><a href="#" class="hover:text-white">About Us</a></li>
+                        <li><a href="#" class="hover:text-white">Contact</a></li>
+                        <li><a href="#" class="hover:text-white">Terms & Conditions</a></li>
+                        <li><a href="#" class="hover:text-white">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-4 text-lg">Popular Routes</h5>
+                    <ul class="text-gray-400 space-y-2">
+                        <li><a href="#" class="hover:text-white">Hyderabad to Vizag</a></li>
+                        <li><a href="#" class="hover:text-white">Vijayawada to Tirupati</a></li>
+                        <li><a href="#" class="hover:text-white">Visakhapatnam to Hyderabad</a></li>
+                        <li><a href="#" class="hover:text-white">Kurnool to Hyderabad</a></li>
+                    </ul>
+                </div>
+                <div>
+                    <h5 class="font-bold mb-4 text-lg">Connect With Us</h5>
+                    <div class="flex space-x-4 mb-4">
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-facebook-f text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-twitter text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-instagram text-xl"></i></a>
+                        <a href="#" class="text-gray-400 hover:text-white"><i class="fab fa-whatsapp text-xl"></i></a>
+                    </div>
+                    <p class="text-gray-400">24/7 Helpline: 1800-123-4567</p>
+                </div>
+            </div>
+            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
+                <p>&copy; 2024 AP Bus Booking. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Cities data
+        const cities = [
+            "Hyderabad", "Visakhapatnam", "Vijayawada", "Guntur", "Nellore", 
+            "Kurnool", "Tirupati", "Warangal", "Kakinada", "Anantapur",
+            "Eluru", "Rajahmundry", "Nizamabad", "Karimnagar", "Machilipatnam",
+            "Ongole", "Chittoor", "Anakapalli", "Srikakulam", "Vizianagaram",
+            "Proddatur", "Markapur", "Nandyal", "Adoni", "Madanapalle"
+        ];
+
+        // Populate city dropdowns
+        function populateCities() {
+            const fromSelect = document.getElementById('fromCity');
+            const toSelect = document.getElementById('toCity');
+            
+            cities.forEach(city => {
+                const option1 = new Option(city, city);
+                const option2 = new Option(city, city);
+                fromSelect.add(option1);
+                toSelect.add(option2);
+            });
+            
+            // Add change event listeners to debug selection
+            fromSelect.addEventListener('change', function() {
+                console.log('From city selected:', this.value);
+                console.log('Selected index:', this.selectedIndex);
+                console.log('Selected option text:', this.options[this.selectedIndex].text);
+            });
+            
+            toSelect.addEventListener('change', function() {
+                console.log('To city selected:', this.value);
+                console.log('Selected index:', this.selectedIndex);
+                console.log('Selected option text:', this.options[this.selectedIndex].text);
+            });
+        }
+
+        // Set minimum date to today
+        function setMinDate() {
+            const today = new Date();
+            const formattedDate = today.toISOString().split('T')[0];
+            const displayDate = today.toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long', 
+                day: 'numeric'
+            });
+            
+            const travelDateInput = document.getElementById('travelDate');
+            const travelDateDisplay = document.getElementById('travelDateDisplay');
+            
+            travelDateInput.value = formattedDate;
+            travelDateDisplay.value = displayDate;
+            
+            // Make display input clickable to show a simple date prompt
+            travelDateDisplay.addEventListener('click', function() {
+                const newDate = prompt('Enter travel date (YYYY-MM-DD):', formattedDate);
+                if (newDate && /^\d{4}-\d{2}-\d{2}$/.test(newDate)) {
+                    const dateObj = new Date(newDate + 'T00:00:00');
+                    if (!isNaN(dateObj.getTime())) {
+                        travelDateInput.value = newDate;
+                        travelDateDisplay.value = dateObj.toLocaleDateString('en-US', {
+                            year: 'numeric',
+                            month: 'long',
+                            day: 'numeric'
+                        });
+                        console.log('Travel date updated to:', newDate);
+                    }
+                }
+            });
+            
+            console.log('Travel date set to:', formattedDate);
+            console.log('Travel date display:', displayDate);
+        }
+
+        // Load popular routes
+        async function loadPopularRoutes() {
+            try {
+                const response = await fetch('/api/popular-routes');
+                const routes = await response.json();
+                
+                const routesContainer = document.getElementById('popularRoutes');
+                routesContainer.innerHTML = routes.map(route => `
+                    <div class="bg-white rounded-lg shadow-md p-6 card-hover cursor-pointer" 
+                         onclick="quickSearch('${route.from_city}', '${route.to_city}')">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h4 class="font-bold text-lg text-gray-800">${route.from_city}</h4>
+                                <p class="text-gray-600">to</p>
+                                <h4 class="font-bold text-lg text-gray-800">${route.to_city}</h4>
+                            </div>
+                            <div class="text-right">
+                                <p class="text-2xl font-bold text-purple-600">₹${route.min_price}</p>
+                                <p class="text-sm text-gray-500">from</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center text-sm text-gray-600">
+                            <i class="fas fa-bus mr-2"></i>
+                            <span>${route.buses}+ buses available</span>
+                        </div>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error('Error loading popular routes:', error);
+            }
+        }
+
+        // Quick search function
+        function quickSearch(from, to) {
+            document.getElementById('fromCity').value = from;
+            document.getElementById('toCity').value = to;
+            document.getElementById('searchForm').dispatchEvent(new Event('submit'));
+        }
+
+        // Handle form submission
+        document.getElementById('searchForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const from = document.getElementById('fromCity').value;
+            const to = document.getElementById('toCity').value;
+            const date = document.getElementById('travelDate').value;
+            
+            if (from && to && date) {
+                window.location.href = `/search?from=${encodeURIComponent(from)}&to=${encodeURIComponent(to)}&date=${date}`;
+            }
+        });
+
+        // Check if user is logged in
+        function checkAuthStatus() {
+            fetch('/api/portfolio')  // This endpoint should return user info if logged in
+                .then(response => {
+                    if (response.ok) {
+                        // User is logged in
+                        document.getElementById('authButtons').innerHTML = `
+                            <div class="flex items-center space-x-3">
+                                <a href="/my-bookings" class="text-white hover:text-purple-100">
+                                    <i class="fas fa-ticket-alt mr-2"></i>My Bookings
+                                </a>
+                                <button onclick="logout()" class="px-4 py-2 bg-red-500 text-white rounded-lg font-semibold hover:bg-red-400 transition">
+                                    <i class="fas fa-sign-out-alt mr-2"></i>Logout
+                                </button>
+                            </div>
+                        `;
+                    }
+                })
+                .catch(() => {
+                    // User not logged in, keep default buttons
+                });
+        }
+
+        // Logout function
+        async function logout() {
+            try {
+                const response = await fetch('/api/logout', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' }
+                });
+                
+                if (response.ok) {
+                    window.location.reload();
+                }
+            } catch (error) {
+                console.error('Logout error:', error);
+            }
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            populateCities();
+            setMinDate();
+            loadPopularRoutes();
+            checkAuthStatus();
+        });
+    </script>
+</body>
+</html>

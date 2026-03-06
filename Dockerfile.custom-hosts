@@ -1,0 +1,9 @@
+# Custom hosts file for Docker container
+# This will be copied to /etc/hosts in the container
+
+127.0.0.1 localhost
+::1 localhost
+127.0.0.1 www.kranthitest.com
+::1 www.kranthitest.com
+
+# Additional custom mappings as needed

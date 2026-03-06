@@ -1,0 +1,36 @@
+services:
+  apbusbooking:
+    build: .
+    container_name: apbusbooking
+    ports:
+      - "80:5000"
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - DOMAIN=www.kranthitest.com
+    extra_hosts:
+      - "www.kranthitest.com:127.0.0.1"
+    dns:
+      - 8.8.8.8
+      - 8.8.4.4
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    volumes:
+      - ./logs:/app/logs
+    networks:
+      - apbusbooking-network
+
+networks:
+  apbusbooking-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
+
+volumes:
+  logs:
